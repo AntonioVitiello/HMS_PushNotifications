@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.huawei.agconnect.AGConnectOptionsBuilder
 import com.huawei.hms.aaid.HmsInstanceId
+import com.huawei.hms.api.HuaweiApiAvailability
+import com.huawei.hms.push.HmsMessaging
 import com.huawei.hms.push.HmsMessaging.DEFAULT_TOKEN_SCOPE
 
 class MainActivity : AppCompatActivity() {
@@ -26,8 +28,8 @@ class MainActivity : AppCompatActivity() {
         object : Thread() {
             override fun run() {
                 try {
+                    // Obtain the app ID from the agconnect-services.json file
                     val appId = AGConnectOptionsBuilder().build(this@MainActivity).getString("client/app_id")
-//IQAAAACy0yxKAAAN997X2zLweXDY9gezcLGOqp4-Kcr8z5HIp4dflFU-cyDWylUHaeNYmZbprY0FvpqxLGBqbOFCEzlyAjthP-qCNnOKOVGEWJDTUQ
                     currentPushToken = HmsInstanceId.getInstance(this@MainActivity).getToken(appId, DEFAULT_TOKEN_SCOPE)
                     Log.d(TAG, "appId: $appId")
                     Log.d(TAG, "PushToken:\n[$currentPushToken]")
@@ -60,16 +62,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun deleteToken() {
-        if (currentPushToken != null) {
-            HmsInstanceId.getInstance(this).deleteToken(currentPushToken)
-            currentPushToken = null
-            Log.d(TAG, "PushToken: DELETED!")
-        }
+        object : Thread() {
+            override fun run() {
+                try {
+                    currentPushToken?.let { pushToken ->
+                        HmsInstanceId.getInstance(this@MainActivity).deleteToken(pushToken)
+                        currentPushToken = null
+                    } ?: run {
+                        // Obtain the app ID from the agconnect-services.json file
+                        val appId = AGConnectOptionsBuilder().build(this@MainActivity).getString("client/app_id")
+                        HmsInstanceId.getInstance(this@MainActivity).deleteToken(appId, DEFAULT_TOKEN_SCOPE)
+                    }
+                    Log.i(TAG, "PushToken deleted successfully")
+                } catch (exc: Exception) {
+                    Log.e(TAG, "Delete PushToken failed", exc)
+                }
+            }
+        }.start()
     }
 
     override fun onDestroy() {
 //        deleteToken()
         super.onDestroy()
+    }
+
+    fun isHmsAvailable(): Boolean {
+        val resultCode = HuaweiApiAvailability.getInstance().isHuaweiMobileServicesAvailable(this)
+        return com.huawei.hms.api.ConnectionResult.SUCCESS == resultCode
+    }
+
+    fun disableHmsPushIfAvailable() {
+        if (isHmsAvailable()) {
+            HmsMessaging.getInstance(this).isAutoInitEnabled = false
+        }
     }
 
 }
