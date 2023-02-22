@@ -81,6 +81,40 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
+    /**
+     * Disables the display of notification messages.
+     * This method applies to notification messages but not data messages.
+     * It is the app that determines whether to enable or disable data messaging.
+     * This is useful for: Do not delete push tokens frequently!
+     * https://developer.huawei.com/consumer/en/doc/development/HMSCore-References/hmsmessaging-0000001050255650#section943612533595
+     * https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-client-dev-0000001050042041
+     */
+    fun disableNotificationMessages() {
+        HmsMessaging.getInstance(this).turnOffPush().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "turnOffPush successfully.")
+            } else {
+                Log.e(TAG, "turnOffPush failed.")
+            }
+        }
+    }
+
+    /**
+     * Enables the display of notification messages.
+     * This method applies to notification messages but not data messages.
+     * It is the app that determines whether to enable or disable data messaging.
+     * https://developer.huawei.com/consumer/en/doc/development/HMSCore-References/hmsmessaging-0000001050255650#section943612533595
+     */
+    fun enableNotificationMessages() {
+        HmsMessaging.getInstance(this).turnOnPush().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "turnOnPush successfully.")
+            } else {
+                Log.e(TAG, "turnOnPush failed.")
+            }
+        }
+    }
+
     override fun onDestroy() {
 //        deleteToken()
         super.onDestroy()
