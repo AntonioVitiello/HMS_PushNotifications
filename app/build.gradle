@@ -1,0 +1,85 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+
+    id 'com.huawei.agconnect'
+}
+
+android {
+    compileSdkVersion 32
+
+    defaultConfig {
+        applicationId "av.hms.push.notif"
+        minSdkVersion 24
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+//    debug.keystore:
+//    SHA256: BD:26:FF:84:B7:FF:0D:6B:53:D3:02:0E:46:9D:BE:CE:2F:E5:41:BE:DF:48:24:23:39:88:B9:9E:FD:28:B5:6C
+//    antonio.keystore:
+//    4E:DC:32:1A:B4:69:E0:6A:ED:F4:21:9B:41:9E:01:C6:DD:F7:37:62:60:A7:D0:F6:BC:53:42:67:A2:D4:32:06
+
+    signingConfigs {
+        debug {
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('C:/Users/antpc/.android/debug.keystore')
+        }
+        release {
+            storePassword 'password'
+            keyAlias 'signinapp'
+            keyPassword 'password'
+            storeFile file('C:/Users/antpc/.android/antonio.keystore')
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+            applicationIdSuffix = ".dev"
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            applicationIdSuffix = ""
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+        ignoreWarnings false
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.huawei.hms:push:6.9.0.300'
+//    implementation 'com.huawei.hms:push:6.7.0.300'
+    implementation 'com.huawei.hms:hmscoreinstaller:6.6.0.300'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
