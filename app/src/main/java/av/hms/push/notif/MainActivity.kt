@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity() {
                     // Obtain the app ID from the agconnect-services.json file
                     val appId = AGConnectOptionsBuilder().build(this@MainActivity).getString("client/app_id")
                     currentPushToken = HmsInstanceId.getInstance(this@MainActivity).getToken(appId, DEFAULT_TOKEN_SCOPE)
-                    Log.d(TAG, "appId: $appId")
-                    Log.d(TAG, "PushToken:\n[$currentPushToken]")
+                    Log.d(TAG, "HMS_DEBUG appId: $appId")
+                    Log.d(TAG, "HMS_DEBUG PushToken:\n[$currentPushToken]")
                 } catch (e: Exception) {
-                    Log.e(TAG, "getToken failed", e)
+                    Log.e(TAG, "HMS_DEBUG getToken failed", e)
                 }
             }
         }.start()
@@ -52,11 +52,11 @@ class MainActivity : AppCompatActivity() {
         intent.extras?.let { bundle ->
             val myKey = "antonio"
             val myValue = bundle.getString(myKey)
-            Log.i(TAG, "PushNotification key-value data: [$myKey] -> [$myValue]")
+            Log.i(TAG, "HMS_DEBUG PushNotification key-value data: [$myKey] -> [$myValue]")
 
             bundle.keySet()?.forEach { key ->
                 val value = bundle.getString(key)
-                Log.i(TAG, "PushNotification key-value data: [$key] -> [$value]")
+                Log.i(TAG, "HMS_DEBUG PushNotification key-value data: [$key] -> [$value]")
             }
         }
     }
@@ -73,9 +73,9 @@ class MainActivity : AppCompatActivity() {
                         val appId = AGConnectOptionsBuilder().build(this@MainActivity).getString("client/app_id")
                         HmsInstanceId.getInstance(this@MainActivity).deleteToken(appId, DEFAULT_TOKEN_SCOPE)
                     }
-                    Log.i(TAG, "PushToken deleted successfully")
+                    Log.i(TAG, "HMS_DEBUG PushToken deleted successfully")
                 } catch (exc: Exception) {
-                    Log.e(TAG, "Delete PushToken failed", exc)
+                    Log.e(TAG, "HMS_DEBUG Delete PushToken failed", exc)
                 }
             }
         }.start()
@@ -92,9 +92,9 @@ class MainActivity : AppCompatActivity() {
     fun disableNotificationMessages() {
         HmsMessaging.getInstance(this).turnOffPush().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d(TAG, "turnOffPush successfully.")
+                Log.d(TAG, "HMS_DEBUG turnOffPush successfully.")
             } else {
-                Log.e(TAG, "turnOffPush failed.")
+                Log.e(TAG, "HMS_DEBUG turnOffPush failed.")
             }
         }
     }
@@ -108,9 +108,9 @@ class MainActivity : AppCompatActivity() {
     fun enableNotificationMessages() {
         HmsMessaging.getInstance(this).turnOnPush().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d(TAG, "turnOnPush successfully.")
+                Log.d(TAG, "HMS_DEBUG turnOnPush successfully.")
             } else {
-                Log.e(TAG, "turnOnPush failed.")
+                Log.e(TAG, "HMS_DEBUG turnOnPush failed.")
             }
         }
     }

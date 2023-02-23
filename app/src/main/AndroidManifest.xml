@@ -14,16 +14,21 @@
         android:theme="@style/Theme.Hms_push_notif"
         tools:targetApi="31">
         <activity
+            android:name=".NotificationTapActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
 
+        <!-- HmsMessageService -->
         <service
             android:name=".MessageService"
             android:directBootAware="true"
@@ -32,11 +37,14 @@
                 <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <!-- Autostart -->
-        <!--        <meta-data-->
-        <!--            android:name="push_kit_auto_init_enabled"-->
-        <!--            android:value="true" />-->
+        <meta-data
+            android:name="push_kit_auto_init_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="com.huawei.messaging.default_notification_icon"
+            android:resource="@drawable/ic_push_notification" />
 
     </application>
-
 </manifest>
